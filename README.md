@@ -95,10 +95,3 @@ This project encompasses the full machine learning lifecycle: from data acquisit
 - **Baseline Assumptions:** The predictions assume a baseline organic reach (normalized at ~1000 votes) and standardized theatrical release windows. Unprecedented viral marketing trends may fall outside the models' capture range.
 
 ---
-
-# Edits
-
-_I have left placeholders for images in the README. To complete the documentation, please save the following images to the `images/` folder and name them exactly as shown below:_
-
-1. **`app_interface.png`**: Take a screenshot of your beautiful Gradio application running locally or on Hugging Face Spaces. Place this right under the main title.
-2. **`data_sparsity_audit.png`** (or another impactful EDA chart): Export one of the great interactive Plotly charts you generated in `02_EDA.ipynb` (for example, the Data Sparsity Audit bar chart or Rating Coverage by Year line chart). Place this in the EDA section to show off your analytical visualization skills.
