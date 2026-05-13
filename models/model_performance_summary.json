@@ -1,0 +1,89 @@
+{
+  "sprint": "Sprint 6 \u2014 Modeling & Evaluation",
+  "train_size": 21161,
+  "test_size": 4256,
+  "test_year": 2025,
+  "regression": {
+    "target": "averageRating (continuous)",
+    "models": {
+      "linear_regression": {
+        "MAE": 1.0131,
+        "RMSE": 1.3351,
+        "R2": 0.2059
+      },
+      "random_forest": {
+        "MAE": 0.9899,
+        "RMSE": 1.3121,
+        "R2": 0.233
+      },
+      "lightgbm": {
+        "MAE": 0.986,
+        "RMSE": 1.3126,
+        "R2": 0.2325,
+        "note": "Best MAE \u2014 selected as primary regressor"
+      }
+    },
+    "market_segment_analysis": {
+      "Hollywood": {
+        "n": 4062,
+        "MAE": 0.9769,
+        "R2": 0.2453
+      },
+      "Indian": {
+        "n": 194,
+        "MAE": 1.1781,
+        "R2": -0.0238,
+        "note": "Negative R2 \u2014 model is Hollywood-biased due to training imbalance"
+      }
+    }
+  },
+  "classification": {
+    "target": "is_hit (binary: rating > 7.0)",
+    "class_balance": {
+      "train_negative": 16671,
+      "train_positive": 4490,
+      "ratio": 3.7129
+    },
+    "models": {
+      "logistic_regression": {
+        "ROC_AUC": 0.7253,
+        "Hit_F1": 0.5,
+        "TP": 637,
+        "FP": 809,
+        "FN": 488,
+        "TN": 2322
+      },
+      "random_forest": {
+        "ROC_AUC": 0.7468,
+        "Hit_F1": 0.52,
+        "TP": 696,
+        "FP": 845,
+        "FN": 429,
+        "TN": 2286,
+        "note": "Best Hit F1 & lowest FN \u2014 selected as primary classifier"
+      },
+      "xgboost": {
+        "ROC_AUC": 0.7481,
+        "Hit_F1": 0.51,
+        "TP": 689,
+        "FP": 876,
+        "FN": 436,
+        "TN": 2255
+      }
+    }
+  },
+  "feature_importance": {
+    "top_engineered_features": {
+      "votes_per_minute": {
+        "lgbm_reg_rank": 3,
+        "rf_cls_rank": 4,
+        "hypothesis": "VALIDATED"
+      },
+      "genre_density": {
+        "lgbm_reg_rank": 5,
+        "rf_cls_rank": 6,
+        "hypothesis": "VALIDATED"
+      }
+    }
+  }
+}
