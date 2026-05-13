@@ -1,37 +1,104 @@
-# Cinema Intelligence
+# 🎬 Cinema Intelligence: Market Success Predictor (2021–2025)
 
-Welcome to the **Cinema Intelligence** project, an end-to-end Machine Learning pipeline that predicts movie success metrics such as the **Expected IMDb Rating** and **Hit/Flop** probability.
+![App Interface Placeholder](images/app_interface.png)
 
-This project covers a robust feature engineering pipeline, addressing temporal data shifts, text-to-math categorical encoding (MultiLabelBinarizer for genres, Target Encoding for languages), and extensive handling of numerical distributions.
+## Overview
 
-## Live Demo
+**Cinema Intelligence** is an end-to-end data science portfolio project designed to predict a movie's **Expected IMDb Rating** and **Hit/Flop status** before its release. Leveraging a robust dataset of 59,905 movies spanning from 2021 to 2025, the pipeline analyzes intricate metadata across the Hollywood and Indian cinema markets.
 
-A live, interactive web interface powered by Gradio is hosted on Hugging Face Spaces!
+This project encompasses the full machine learning lifecycle: from data acquisition, rigorous integrity auditing, and exploratory analysis, to advanced feature engineering, predictive modeling, and model deployment on Hugging Face Spaces via Gradio.
 
-👉 **[Launch the Cinema Intelligence Predictor (Live Demo)](#)** 
-*(Placeholder: Update the `#` with your Hugging Face Space URL once deployed)*
+## Key Features
 
-## Model Performance Summary
+- **Dual-Market Focus:** Specialized regional-based segmentation distinguishing Hollywood and Indian cinema for accurate audience profiling.
+- **Predictive Power:**
+  - _Expected Rating:_ Predicted using an optimized LightGBM Regressor.
+  - _Hit/Flop Status:_ Classified using a robust Random Forest Classifier.
+- **Production-Grade Data Pipeline:** Asynchronous TMDb enrichment workflow and reliable data cleaning from a PostgreSQL backend.
+- **Interactive Web Interface:** A deployed Gradio application designed for intuitive user interaction and real-time prediction.
 
-To demonstrate the technical depth of the modeling phase, we compared simple baseline models against advanced tree-based architectures.
+## Repository Structure
 
-### Regression (Target: `averageRating`)
-| Model | MAE | RMSE | R² Score | Notes |
-|-------|-----|------|----------|-------|
-| **Linear Regression** (Baseline) | 1.0131 | 1.3351 | 0.2059 | Initial Benchmark |
-| **LightGBM** (Advanced) | **0.9860** | **1.3126** | **0.2325** | Best MAE — Selected as primary regressor |
+```text
+├── hf/
+│   ├── app.py                     # Gradio application script for Hugging Face deployment
+│   ├── models/                    # Serialized machine learning models (LightGBM, Random Forest)
+│   ├── preprocessors/             # Saved artifacts (StandardScaler, MultiLabelBinarizer)
+│   └── requirements.txt           # Deployment dependencies
+├── notebooks/
+│   ├── 01_Data_Aquisition.ipynb   # PostgreSQL connection, IMDb/TMDb data ingestion, and integrity audit
+│   ├── 02_EDA.ipynb               # Professional-grade Exploratory Data Analysis with Plotly
+│   ├── 03A_Feature_Engineering.ipynb # Data splitting, handling missing values, and categorical encoding
+│   ├── 03B_Feature_Engineering.ipynb # Feature scaling and Parquet dataset generation
+│   └── 04_Data_Modeling.ipynb     # Model training, hyperparameter tuning, and evaluation
+├── data/                          # Processed analytics and ML-ready datasets (.parquet)
+├── images/                        # Assets and charts used for documentation
+└── README.md                      # Project documentation
+```
 
-### Classification (Target: `is_hit` | Rating > 7.0)
-| Model | ROC AUC | Hit F1-Score | True Positives | False Negatives | Notes |
-|-------|---------|--------------|----------------|-----------------|-------|
-| **Logistic Regression** (Baseline)| 0.7253 | 0.50 | 637 | 488 | Initial Benchmark |
-| **Random Forest** (Advanced) | **0.7468** | **0.52** | **696** | **429** | Best Hit F1 & lowest FN — Selected as primary classifier |
+## Data Science Pipeline Breakdown
 
-## Instructions for Deployment
+### 1. Data Acquisition & Health Audit (`01_Data_Aquisition.ipynb`)
 
-The deployment-ready files are located in the `hf/` directory.
+- Extracted and combined data from IMDb datasets and an internal `cinema_intelligence` PostgreSQL database.
+- Implemented robust regional-based logic to segment 48,595 Hollywood and 11,310 Indian movies.
+- Handled outliers, normalized external IDs, and applied fixes for runtime anomalies.
 
-1. Go to [Hugging Face Spaces](https://huggingface.co/spaces) and create a new Space.
-2. Select **Gradio** as the SDK and use the **CPU Basic** hardware (free tier).
-3. Upload the contents of the `hf/` folder (including `models/` and `preprocessors/`) directly to your Hugging Face Space repository.
-4. The space will automatically install the libraries from `requirements.txt` and launch `app.py`.
+### 2. Exploratory Data Analysis (`02_EDA.ipynb`)
+
+- Conducted rigorous statistical testing to identify market-specific archetypes.
+- Evaluated dataset sparsity, uncovering trends in missing runtimes and rating coverages (particularly noticing sparsity in unreleased 2025 titles).
+- Synthesized actionable insights via interactive Plotly visualizations.
+
+![Data Sparsity Audit Chart Placeholder](images/data_sparsity_audit.png)
+
+### **EDA Summary**
+
+![Data Sparsity Audit Chart Placeholder](images/EDA_summary.png)
+
+### 3. Feature Engineering (`03A` & `03B_Feature_Engineering.ipynb`)
+
+- Chronological data splitting applied to prevent data leakage.
+- Generated powerful engineered features: `language_quality_score`, `genre_density`, and `votes_per_minute`.
+- Employed `StandardScaler` for numeric scaling and `MultiLabelBinarizer` for genre binarization.
+- Final feature matrices exported cleanly to `.parquet` format.
+
+### 4. Modeling & Evaluation (`04_Data_Modeling.ipynb`)
+
+- Built and evaluated multiple baselines.
+- **Regression:** Tuned a LightGBM regressor to effectively predict `averageRating`.
+- **Classification:** Trained a Random Forest classifier to categorize movies into Hit/Flop classifications.
+- Serialized optimal models and preprocessor objects via `joblib` for deployment readiness.
+
+### 5. Deployment (`hf/app.py`)
+
+- Integrated inference scripts, ML models, and scalers into a unified, lightweight pipeline.
+- Built a responsive and aesthetically pleasing user interface using the `Gradio` framework.
+- Deployed successfully on Hugging Face Spaces for real-time portfolio demonstration.
+
+## How to Run Locally
+
+1. **Clone the repository** and navigate to the project root.
+2. **Install dependencies**:
+   ```bash
+   pip install -r hf/requirements.txt
+   ```
+3. **Run the Gradio App**:
+   ```bash
+   python hf/app.py
+   ```
+4. Access the web interface at `http://127.0.0.1:7860`.
+
+## Technical Limitations
+
+- **Hardware Profile:** Models are optimized to run on standard CPU environments without requiring GPU acceleration.
+- **Baseline Assumptions:** The predictions assume a baseline organic reach (normalized at ~1000 votes) and standardized theatrical release windows. Unprecedented viral marketing trends may fall outside the models' capture range.
+
+---
+
+# Edits
+
+_I have left placeholders for images in the README. To complete the documentation, please save the following images to the `images/` folder and name them exactly as shown below:_
+
+1. **`app_interface.png`**: Take a screenshot of your beautiful Gradio application running locally or on Hugging Face Spaces. Place this right under the main title.
+2. **`data_sparsity_audit.png`** (or another impactful EDA chart): Export one of the great interactive Plotly charts you generated in `02_EDA.ipynb` (for example, the Data Sparsity Audit bar chart or Rating Coverage by Year line chart). Place this in the EDA section to show off your analytical visualization skills.
